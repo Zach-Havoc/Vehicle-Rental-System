@@ -626,7 +626,6 @@ public class Home extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
         jTextField_fullname1 = new javax.swing.JTextField();
-        jDateChooser_birthDate1 = new com.toedter.calendar.JDateChooser();
         jLabel35 = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
         jTextField_phone1 = new javax.swing.JTextField();
@@ -662,7 +661,6 @@ public class Home extends javax.swing.JFrame {
         jTextArea_address = new javax.swing.JTextArea();
         jTextField_email = new javax.swing.JTextField();
         jTextField_phone = new javax.swing.JTextField();
-        jDateChooser_birthDate = new com.toedter.calendar.JDateChooser();
         jTextField_fullname = new javax.swing.JTextField();
         jSpinner_id2 = new javax.swing.JSpinner();
         jLabel27 = new javax.swing.JLabel();
@@ -671,14 +669,13 @@ public class Home extends javax.swing.JFrame {
         jLabel44 = new javax.swing.JLabel();
         jLabel45 = new javax.swing.JLabel();
         jLabel46 = new javax.swing.JLabel();
+        jDateChooser_birthDate = new com.toedter.calendar.JDateChooser();
         bookCarPanel = new javax.swing.JPanel();
         jPanel_rent_details = new javax.swing.JPanel();
         jLabel_rent_details = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
-        jDateChooser_Pickup_Date = new com.toedter.calendar.JDateChooser();
         jLabel_dropoff = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
-        jDateChooser_dropoff = new com.toedter.calendar.JDateChooser();
         jLabel_dropoff1 = new javax.swing.JLabel();
         jButton_BookCar_ = new javax.swing.JButton();
         jLabel47 = new javax.swing.JLabel();
@@ -687,6 +684,8 @@ public class Home extends javax.swing.JFrame {
         jButton_Edit_Remove_Booking = new javax.swing.JButton();
         jButton_Edit_refresh_total_Price = new javax.swing.JButton();
         jButton_BookingLIst_1 = new javax.swing.JButton();
+        jDateChooser_Pickup_Date = new com.toedter.calendar.JDateChooser();
+        jDateChooser_dropoff = new com.toedter.calendar.JDateChooser();
         jPanel_select_car = new javax.swing.JPanel();
         jLabel_select_car = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
@@ -2016,8 +2015,7 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(jTextField_fullname1)
                             .addGroup(locationPanelLayout.createSequentialGroup()
                                 .addComponent(jSpinner_id3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 119, Short.MAX_VALUE))
-                            .addComponent(jDateChooser_birthDate1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(0, 119, Short.MAX_VALUE))))
                     .addGroup(locationPanelLayout.createSequentialGroup()
                         .addGroup(locationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel37)
@@ -2025,7 +2023,7 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(jLabel40))
                         .addGap(65, 65, 65)
                         .addGroup(locationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
                             .addComponent(jTextField_phone1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField_email1)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, locationPanelLayout.createSequentialGroup()
@@ -2073,10 +2071,8 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jTextField_fullname1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(locationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel35)
-                    .addComponent(jDateChooser_birthDate1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel35)
+                .addGap(13, 13, 13)
                 .addGroup(locationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField_phone1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel37))
@@ -2279,22 +2275,26 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jLabel45, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(customerPanelLayout.createSequentialGroup()
-                        .addComponent(jButton_Remove2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton_Edit2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton_Add2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jTextField_fullname, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField_phone, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField_email, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, customerPanelLayout.createSequentialGroup()
-                        .addComponent(jSpinner_id2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 146, Short.MAX_VALUE))
-                    .addComponent(jDateChooser_birthDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(752, 752, 752))
+                        .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(customerPanelLayout.createSequentialGroup()
+                                .addComponent(jButton_Remove2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton_Edit2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton_Add2, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
+                            .addComponent(jTextField_fullname, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField_phone, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField_email, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, customerPanelLayout.createSequentialGroup()
+                                .addComponent(jSpinner_id2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 146, Short.MAX_VALUE)))
+                        .addGap(752, 752, 752))
+                    .addGroup(customerPanelLayout.createSequentialGroup()
+                        .addComponent(jDateChooser_birthDate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(customerPanelLayout.createSequentialGroup()
                 .addGap(219, 219, 219)
                 .addComponent(jButton_Refresh2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2319,22 +2319,24 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jTextField_fullname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel43, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel38)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(customerPanelLayout.createSequentialGroup()
-                        .addComponent(jDateChooser_birthDate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField_phone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel44))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel45))
-                        .addGap(14, 14, 14)
-                        .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel46))))
+                        .addComponent(jLabel38, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(13, 13, 13))
+                    .addGroup(customerPanelLayout.createSequentialGroup()
+                        .addComponent(jDateChooser_birthDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_phone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel44))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel45))
+                .addGap(14, 14, 14)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel46))
                 .addGap(18, 18, 18)
                 .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton_Remove2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2451,16 +2453,12 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(jButton_Edit_refresh_total_Price)
                     .addGroup(jPanel_rent_detailsLayout.createSequentialGroup()
                         .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jDateChooser_Pickup_Date, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jDateChooser_Pickup_Date, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel_rent_detailsLayout.createSequentialGroup()
-                        .addGroup(jPanel_rent_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel47))
+                        .addComponent(jLabel47)
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel_rent_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel_totalFee, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jDateChooser_dropoff, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel_totalFee, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel_rent_detailsLayout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addGroup(jPanel_rent_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -2471,7 +2469,11 @@ public class Home extends javax.swing.JFrame {
                             .addGroup(jPanel_rent_detailsLayout.createSequentialGroup()
                                 .addComponent(jButton_BookCar_, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(29, 29, 29)
-                                .addComponent(jButton_BookingLIst_, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jButton_BookingLIst_, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel_rent_detailsLayout.createSequentialGroup()
+                        .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jDateChooser_dropoff, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         jPanel_rent_detailsLayout.setVerticalGroup(
@@ -2483,12 +2485,12 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jLabel_dropoff1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel_rent_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jDateChooser_Pickup_Date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel36))
+                    .addComponent(jLabel36)
+                    .addComponent(jDateChooser_Pickup_Date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel_dropoff, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addGroup(jPanel_rent_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel_rent_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel41)
                     .addComponent(jDateChooser_dropoff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -2552,6 +2554,7 @@ public class Home extends javax.swing.JFrame {
             jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel_select_car, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel_select_carLayout.createSequentialGroup()
+                .addGap(65, 65, 65)
                 .addGroup(jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel_select_carLayout.createSequentialGroup()
                         .addGroup(jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -2562,7 +2565,6 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(jLabel_car_model, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel_pricePerDay, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel_select_carLayout.createSequentialGroup()
-                        .addGap(65, 65, 65)
                         .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton_select_car_)
@@ -3714,7 +3716,6 @@ if (!isAvailable) {
     private javax.swing.JComboBox<String> jComboBox_brand;
     private com.toedter.calendar.JDateChooser jDateChooser_Pickup_Date;
     private com.toedter.calendar.JDateChooser jDateChooser_birthDate;
-    private com.toedter.calendar.JDateChooser jDateChooser_birthDate1;
     private com.toedter.calendar.JDateChooser jDateChooser_dropoff;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
