@@ -659,7 +659,7 @@ public class Form_Cars extends javax.swing.JFrame {
         // Add new Car
         // Car info
         
-        int brand = (int)(jSpinner_Id.getValue());
+        //int brand = (int)(jSpinner_Id.getValue());
         String model = jTextField_Model.getText();
         String fuel = jComboBox_Fuel.getSelectedItem().toString();
         String color = jComboBox_Color.getSelectedItem().toString();
@@ -692,10 +692,10 @@ public class Form_Cars extends javax.swing.JFrame {
         
         /*
         */
-        if (verify()){
-        car.addCar(brand, model, fuel, color, plateNum, passengers, gearbox, price, air_cond, 
-                airbags, sunroof, heated_seats, nav_sys, bluetooth, elec_win, gps);
-        }
+//        if (verify()){
+//        car.addCar(brand, model, fuel, color, plateNum, passengers, gearbox, price, air_cond, 
+//                airbags, sunroof, heated_seats, nav_sys, bluetooth, elec_win, gps);
+//        }
     }//GEN-LAST:event_jButton_Add_Car_ActionPerformed
 
     private void jLabel_close1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_close1MouseClicked
@@ -850,10 +850,10 @@ public class Form_Cars extends javax.swing.JFrame {
         
         /*
         */
-        if (verify()){
-        car.editCar(id, brand, model, fuel, color, plateNum, passengers, gearbox, price, air_cond, 
-                airbags, sunroof, heated_seats, nav_sys, bluetooth, elec_win, gps);
-        }
+//        if (verify()){
+//        car.editCar(id, brand, model, fuel, color, plateNum, passengers, gearbox, price, air_cond, 
+//                airbags, sunroof, heated_seats, nav_sys, bluetooth, elec_win, gps);
+//        }
     }//GEN-LAST:event_jButton_Edit_ActionPerformed
 
     private void jButton_Cars_List_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Cars_List_ActionPerformed

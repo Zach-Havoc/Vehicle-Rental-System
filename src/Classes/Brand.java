@@ -195,8 +195,6 @@ public class Brand {
          
          try {
              while(rs.next()){
-                 System.out.println(rs.getInt(1));
-                 System.out.println(rs.getString(2));
                  Brand brand = new Brand(rs.getInt(1),rs.getString(2),rs.getBytes(3));
                  brdList.add(brand);
                  
@@ -229,12 +227,9 @@ public class Brand {
 
     try {
         while (rs.next()) {
-            int brandId = rs.getInt(1);  // Get brand_id (first column)
-            String brandName = rs.getString(2);  // Get brand_name (second column)
+            int brandId = rs.getInt(1);  
+            String brandName = rs.getString(2);  
             brand_map.put(brandId, brandName);
-
-            // Debugging: Print the brand_id and brand_name
-            System.out.println("Fetched Brand ID: " + brandId + ", Name: " + brandName);
         }
     } catch (SQLException ex) {
         Logger.getLogger(Brand.class.getName()).log(Level.SEVERE, null, ex);

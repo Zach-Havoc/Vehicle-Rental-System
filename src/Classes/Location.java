@@ -125,7 +125,6 @@ public class Location {
             }
             else{
                 JOptionPane.showMessageDialog(null , "Location Not been Removed" , "Remove Location", 2);
-                //System.out.println("Brand Not Removed!");
             }
             
         } catch (SQLException ex) {
@@ -159,8 +158,6 @@ public class Location {
          
          try {
              while(rs.next()){
-                 System.out.println(rs.getInt(1));
-                 System.out.println(rs.getString(2));
                  Location location = new Location(rs.getInt(1),rs.getString(2),rs.getString(3));
                  locList.add(location);
                  
@@ -179,8 +176,6 @@ public class Location {
          
          try {
              while(rs.next()){
-                 System.out.println(rs.getInt(1));
-                 System.out.println(rs.getString(2));
                  Location location = new Location(rs.getInt(1),rs.getString(2),rs.getString(3));
                  locList.add(location);
                  

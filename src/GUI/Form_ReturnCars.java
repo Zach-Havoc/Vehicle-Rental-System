@@ -159,6 +159,7 @@ public class Form_ReturnCars extends javax.swing.JFrame {
         jSpinner_damage_Fee = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -303,7 +304,6 @@ public class Form_ReturnCars extends javax.swing.JFrame {
 
         buttonGroup1.add(jRadioButton_without_Damage);
         jRadioButton_without_Damage.setText("Withouot Damage");
-        jRadioButton_without_Damage.setOpaque(false);
         jRadioButton_without_Damage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton_without_DamageActionPerformed(evt);
@@ -312,7 +312,6 @@ public class Form_ReturnCars extends javax.swing.JFrame {
 
         buttonGroup1.add(jRadioButton_with_Damage);
         jRadioButton_with_Damage.setText("With Damage");
-        jRadioButton_with_Damage.setOpaque(false);
         jRadioButton_with_Damage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton_with_DamageActionPerformed(evt);
@@ -403,7 +402,7 @@ public class Form_ReturnCars extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jDateChooser_retrunmentDate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addGap(12, 12, 12)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

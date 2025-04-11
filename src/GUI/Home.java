@@ -102,7 +102,7 @@ public class Home extends javax.swing.JFrame {
         btn_group.add(jRadioButton_Automatic);
         btn_group.add(jRadioButton_Manual);
         
-        //populateComboBoxBrands();
+        populateComboBoxBrands();
         populateJtableWithBrands();
         populateJtableWithCustomers();
         populateDriverComboBox();
@@ -154,15 +154,14 @@ public class Home extends javax.swing.JFrame {
     // pupulated the jComboBox_brands
 
     
-//    public void populateComboBoxBrands()
-//    {
-//        for ( String s : Brandmap.values())
-//        {
-//            jComboBox_brand.addItem(s);
-//            jComboBox_Brands_.addItem(s);
-//            
-//        }
-//    }
+    public void populateComboBoxBrands()
+    {
+        for ( String s : Brandmap.values())
+        {
+            jComboBox_brand.addItem(s);
+            jComboBox_Brands_.addItem(s);
+        }
+    }
     
     private void populateDriverComboBox() {
     // Create an instance of the Drivers class
@@ -696,6 +695,7 @@ public class Home extends javax.swing.JFrame {
         jLabel49 = new javax.swing.JLabel();
         jLabel50 = new javax.swing.JLabel();
         jLabel_pricePerDay = new javax.swing.JLabel();
+        jComboBox_Brands_ = new javax.swing.JComboBox<>();
         jPanel_select_customer = new javax.swing.JPanel();
         jLabel_select_customer = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
@@ -2548,13 +2548,15 @@ public class Home extends javax.swing.JFrame {
         jLabel_pricePerDay.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel_pricePerDay.setText("###");
 
+        jComboBox_Brands_.setToolTipText("");
+
         javax.swing.GroupLayout jPanel_select_carLayout = new javax.swing.GroupLayout(jPanel_select_car);
         jPanel_select_car.setLayout(jPanel_select_carLayout);
         jPanel_select_carLayout.setHorizontalGroup(
             jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel_select_car, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel_select_car, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
             .addGroup(jPanel_select_carLayout.createSequentialGroup()
-                .addGap(65, 65, 65)
+                .addGap(67, 67, 67)
                 .addGroup(jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel_select_carLayout.createSequentialGroup()
                         .addGroup(jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -2567,20 +2569,25 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(jPanel_select_carLayout.createSequentialGroup()
                         .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton_select_car_)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel30)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel_car_id)
-                        .addGap(85, 85, 85)))
-                .addGap(142, 142, 142))
+                        .addGroup(jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel_select_carLayout.createSequentialGroup()
+                                .addComponent(jButton_select_car_)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel30)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel_car_id))
+                            .addComponent(jComboBox_Brands_, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(67, 67, 67)))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
         jPanel_select_carLayout.setVerticalGroup(
             jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_select_carLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel_select_car, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox_Brands_, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel32)
                     .addComponent(jButton_select_car_)
@@ -2594,7 +2601,7 @@ public class Home extends javax.swing.JFrame {
                 .addGroup(jPanel_select_carLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel50)
                     .addComponent(jLabel_pricePerDay))
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addGap(26, 26, 26))
         );
 
         jLabel_select_customer.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -2873,7 +2880,7 @@ public class Home extends javax.swing.JFrame {
         String bluetooth = "no";
         String elec_win = "no";
         String gps = "no";
-
+        
         if (jRadioButton_Manual.isSelected()){gearbox = "manual";}
 
         if (jRadioButton_Features_AirBag.isSelected()){air_cond = "yes";}
@@ -3710,6 +3717,7 @@ if (!isAvailable) {
     private javax.swing.JButton jButton_Select_Customer;
     private javax.swing.JButton jButton_browse;
     private javax.swing.JButton jButton_select_car_;
+    private javax.swing.JComboBox<String> jComboBox_Brands_;
     private javax.swing.JComboBox<String> jComboBox_Color;
     private javax.swing.JComboBox<String> jComboBox_DriverList;
     private javax.swing.JComboBox<String> jComboBox_Fuel;

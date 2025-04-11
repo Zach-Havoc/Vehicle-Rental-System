@@ -305,14 +305,16 @@ public class Car {
     }
   
         public void addCar(String _brand, String _model, String _fuel, String _color, String _plateNum, int _passengers, 
-                    String _gearbox, int _price, String _air_cond, String _airbag, String _sunroof,
-                    String _heated_seats, String _nav_sys, String _bluetooth, String _elec_window, String _gps){
-    String insertQuery = "INSERT INTO `cars`(`brand`, `model`, `fuel`, `color`, `plateNum`, `passengers`, `gearbox`, `price`, `air_conditioning`, `air_bag`, `sunroof`, `heated_seats`, `nav_system`, `bluetooth`, `electric_windows`, `gps`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                   String _gearbox, int _price, String _air_cond, String _airbag, String _sunroof,
+                   String _heated_seats, String _nav_sys, String _bluetooth, String _elec_window, String _gps) {
+    
+    String insertQuery = "INSERT INTO `cars`(`brand`, `model`, `fuel`, `color`, `plateNum`, `passengers`, `gearbox`, `price`, `air_conditioning`, `air_bag`, `sunroof`, `heated_seats`, `nav_system`, `bluetooth`, `electric_windows`, `gps`, `status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    
     PreparedStatement ps;
-   
+
     try {
         ps = DB.getConnection().prepareStatement(insertQuery);
-        ps.setString(1, _brand);  // Ensure that _brand contains the correct ID value for the brand
+        ps.setString(1, _brand); 
         ps.setString(2, _model);
         ps.setString(3, _fuel);
         ps.setString(4, _color);
@@ -328,19 +330,18 @@ public class Car {
         ps.setString(14, _bluetooth);
         ps.setString(15, _elec_window);
         ps.setString(16, _gps);
-        
+        ps.setString(17, "available");
+
         if (ps.executeUpdate() != 0) {
-            JOptionPane.showMessageDialog(null , "The new Vehicle has been Added" , "Add Vehicle", 1);
+            JOptionPane.showMessageDialog(null, "The new Vehicle has been Added", "Add Vehicle", 1);
         } else {
-            JOptionPane.showMessageDialog(null , "Vehicle Not been Added" , "Add Vehicle", 2);
+            JOptionPane.showMessageDialog(null, "Vehicle Not been Added", "Add Vehicle", 2);
         }
     } catch (SQLException ex) {
         Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
     }
-
 }
 
-  
     
     // add car images
      public void addCarImage(int car_id, byte[] car_image){
@@ -427,7 +428,6 @@ public class Car {
             }
             else{
                 JOptionPane.showMessageDialog(null , "Vehicle Not been Removed" , "Remove Vehicle", 2);
-                //System.out.println("Brand Not Removed!");
             }
             
         } catch (SQLException ex) {
@@ -602,9 +602,6 @@ public class Car {
         psCar.setInt(2, carId);
         psCar.executeUpdate();
 
-
-        // Optional: log success or display a message
-        System.out.println("Car status updated and reservation removed successfully.");
 
     } catch (SQLException ex) {
         // Handle exceptions (e.g., log the error)
