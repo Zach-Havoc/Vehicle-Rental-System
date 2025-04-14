@@ -399,7 +399,6 @@ public class Car {
             
             if(ps.executeUpdate()!=0){
                 JOptionPane.showMessageDialog(null , "The Vehicle has been edited" , "Edit Vehicle info", 1);
-                
             }
             else{
                 JOptionPane.showMessageDialog(null , "Vehicle not been edited" , "Edit Vehicle info", 2);
@@ -408,7 +407,6 @@ public class Car {
         } catch (SQLException ex) {
             Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
      
      // function to remove car
@@ -564,32 +562,6 @@ public class Car {
     return false;
 }
 
-        
-        
-//        public boolean isCarAvailable(int carId, String startDate, String endDate) {
-//    String query = "SELECT * FROM `cars` c LEFT JOIN `reservation` r ON c.id = r.car_id "
-//                 + "WHERE c.id = ? AND c.vehicle_count > 0 AND ("
-//                 + "(? BETWEEN r.start_date AND r.end_date) OR "
-//                 + "(? BETWEEN r.start_date AND r.end_date) OR "
-//                 + "(r.start_date BETWEEN ? AND ?) OR "
-//                 + "(r.end_date BETWEEN ? AND ?))";
-//    try (PreparedStatement ps = DB.getConnection().prepareStatement(query)) {
-//        ps.setInt(1, carId);
-//        ps.setString(2, startDate);
-//        ps.setString(3, endDate);
-//        ps.setString(4, startDate);
-//        ps.setString(5, endDate);
-//        ps.setString(6, startDate);
-//        ps.setString(7, endDate);
-//        ResultSet rs = ps.executeQuery();
-//        return !rs.next(); // If no rows, car is available
-//    } catch (SQLException ex) {
-//        Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
-//    }
-//    return false;
-//}
-
-
                            // ito ay sa pag update ng kotse
         public void updateCarStatus(int carId, String status) {
     String updateCarQuery = "UPDATE `cars` SET `status` = ? WHERE `id` = ?";
@@ -630,6 +602,4 @@ public long countMaintenanceCars() {
     return maintenanceCarsCount;  // Return the count of available cars
 }
 
-    
-    
 }

@@ -33,6 +33,7 @@ public class Form_ReturnCars extends javax.swing.JFrame {
     Booking book = new Booking();
     ArrayList<Classes.Booking> book_list = booking.bookingList();
     Car car = new Car();
+    
     public Form_ReturnCars() {
         initComponents();
         populateJtableWithBooking();
@@ -66,12 +67,6 @@ public class Form_ReturnCars extends javax.swing.JFrame {
 
     String[] columnsName = {"car id","booking id", "Car Model", "Customer Name", "Start Date", "End Date", "Total Price", "Driver", "Driver Name", "Plate Number"};
 
-    // If there are no bookings, show a message and clear the table
-    if (booking_list.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "No bookings to display!", "Information", JOptionPane.INFORMATION_MESSAGE);
-        jTable_unavailable_vehicle_.setModel(new DefaultTableModel(new Object[0][columnsName.length], columnsName));
-        return;
-    }
 
     // Prepare the rows for the table
     Object[][] rows = new Object[booking_list.size()][columnsName.length];
