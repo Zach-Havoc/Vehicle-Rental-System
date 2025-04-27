@@ -84,39 +84,7 @@ public class Brand {
         }
     }
     
-    
-    
-    // ITO ANG DEFAULT
-    // function to add, edit, and remove brand
-//    public void addBrand(String _name, byte[] _logo){
-//        String insertQuery = "INSERT INTO `brands`( `name`, `logo`) VALUES (?,?)";
-//        PreparedStatement ps;
-//        
-//        try 
-//        {
-//            
-//            ps = DB.getConnection().prepareStatement(insertQuery);
-//            ps.setString(1, _name);
-//            ps.setBytes(2, _logo);
-//            
-//            if(ps.executeUpdate()!=0)
-//            {
-//                JOptionPane.showMessageDialog(null , "The Vehicle Brand has been Added" , "Add Vehicle Brand", 1); 
-//            }
-//            else
-//            {
-//                JOptionPane.showMessageDialog(null , "Vehicle Brand Not been Added" , "Add Vehicle Brand", 2);
-//            }
-//            
-//        } 
-//        catch (Exception ex) 
-//        {
-//            JOptionPane.showMessageDialog(null , "Use a smaller size image" +ex.getMessage(), "Brand Logo", 2);
-//            // Logger .getLogger(Brand.class.getName()).Log(Level.SEVERE,  nul, ex);
-//                    
-//        } 
-//        
-//    }
+   
     
     // function to edit brand
      public void editBrand(int _id, String _name, byte[] _logo){
@@ -239,27 +207,35 @@ public class Brand {
 }
 
      
-     
-     
-     
-    // ITO ANG DEFAULT
-//     public HashMap<Integer ,String> brandsHashMap()
-//     {
-//         HashMap<Integer ,String> brand_map =  new  HashMap <Integer ,String>();
-//         
-//         ResultSet rs = getData("SELECT * FROM `brands`");
-//         
-//         
-//         try {
-//             while (rs.next())
-//             {
-//                 brand_map.put( rs.getInt(1), rs.getString(2));
-//             }
-//         } catch (SQLException ex) {
-//             Logger.getLogger(Brand.class.getName()).log(Level.SEVERE, null, ex);
-//         }
-//
-//         return brand_map;
-//     }
+     public static class BrandBookingCount {
+    public String brand;
+    public int count;
+    public BrandBookingCount(String brand, int count) {
+        this.brand = brand;
+        this.count = count;
+    }
+}
+
     
+    public static ArrayList<BrandBookingCount> getTopNBookedBrands(int limit) {
+    ArrayList<BrandBookingCount> topBrands = new ArrayList<>();
+    String sql = "SELECT c.brand, COUNT(*) AS times_booked " +
+                 "FROM reservation r " +
+                 "JOIN cars c ON r.car_id = c.id " +
+                 "GROUP BY c.brand " +
+                 "ORDER BY times_booked DESC " +
+                 "LIMIT " + limit;
+    try (PreparedStatement ps = DB.getConnection().prepareStatement(sql)) {
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            topBrands.add(new BrandBookingCount(rs.getString("brand"), rs.getInt("times_booked")));
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(Brand.class.getName()).log(Level.SEVERE, null, ex);
+        JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return topBrands;
+}
+
+     
 }

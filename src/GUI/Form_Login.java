@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Classes.DB;
+import fordesign.RoundedButton;
+import fordesign.RoundedPasswordField;
+import fordesign.RoundedTextField;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
@@ -47,11 +50,11 @@ public class Form_Login extends javax.swing.JFrame {
         jLabel_close = new javax.swing.JLabel();
         jLabel_title = new javax.swing.JLabel();
         jLabel_username = new javax.swing.JLabel();
-        jTextField_username = new javax.swing.JTextField();
+        jTextField_username = new RoundedTextField(0,25);
         jLabel_password = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        jPasswordField1 = new RoundedPasswordField(25,25);
         jCheckBox_password = new javax.swing.JCheckBox();
-        jButton1 = new javax.swing.JButton();
+        jButton1 = new RoundedButton(45);
         jLabel2 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -157,7 +160,7 @@ public class Form_Login extends javax.swing.JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 440, 347, 43));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wothoutlogo.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.jpg"))); // NOI18N
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1120, 610));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

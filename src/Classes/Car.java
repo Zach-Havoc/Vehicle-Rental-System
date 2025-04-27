@@ -19,6 +19,7 @@ public class Car {
     private int id;
     private String brand;
     private String model;
+    private String type;
     private String fuel;
     private String color;
     private String plateNum;
@@ -38,10 +39,11 @@ public class Car {
     public Car() {
     }
 
-    public Car(int id, String brand, String model, String fuel, String color, String plateNum, int passengers, String gearbox, int price, String air_cond, String airbag, String sunroof, String heated_seats, String nav_sys, String bluetooth, String elec_window, String gps, String status) {
+    public Car(int id, String brand, String model, String type, String fuel, String color, String plateNum, int passengers, String gearbox, int price, String air_cond, String airbag, String sunroof, String heated_seats, String nav_sys, String bluetooth, String elec_window, String gps, String status) {
         this.id = id;
         this.brand = brand;
         this.model = model;
+        this.type = type;
         this.fuel = fuel;
         this.color = color;
         this.plateNum = plateNum;
@@ -58,8 +60,15 @@ public class Car {
         this.gps = gps;
         this.status = status; // Initialize status
     }
+    
+     public String getType(){
+         return type;
+     }
+     
+     public void setType(String type){
+         this.type = type;
+     }
 
-    // Getter and Setter for 'status'
     public String getStatus() {
         return status;
     }
@@ -68,7 +77,7 @@ public class Car {
         this.status = status;
     }
 
-    // Other getters and setters...
+
     public int getId() {
         return id;
     }
@@ -279,21 +288,22 @@ public class Car {
                     rs.getInt(1), // id
                     rs.getString(2), // brand
                     rs.getString(3), // model
-                    rs.getString(4), // fuel
-                    rs.getString(5), // color
-                    rs.getString(6), // plateNum
-                    rs.getInt(7), // passengers
-                    rs.getString(8), // gearbox
-                    rs.getInt(9), // price
-                    rs.getString(10), // air_cond
-                    rs.getString(11), // airbag
-                    rs.getString(12), // sunroof
-                    rs.getString(13), // heated_seats
-                    rs.getString(14), // nav_sys
-                    rs.getString(15), // bluetooth
-                    rs.getString(16), // elec_window
-                    rs.getString(17), // gps
-                    rs.getString(18) // status (this column should be present in the database)
+                    rs.getString(4),
+                    rs.getString(5), // fuel
+                    rs.getString(6), // color
+                    rs.getString(7), // plateNum
+                    rs.getInt(8), // passengers
+                    rs.getString(9), // gearbox
+                    rs.getInt(10), // price
+                    rs.getString(11), // air_cond
+                    rs.getString(12), // airbag
+                    rs.getString(13), // sunroof
+                    rs.getString(14), // heated_seats
+                    rs.getString(15), // nav_sys
+                    rs.getString(16), // bluetooth
+                    rs.getString(17), // elec_window
+                    rs.getString(18), // gps
+                    rs.getString(19) 
                 );
 
                 carsList.add(car);
@@ -304,33 +314,35 @@ public class Car {
         return carsList;
     }
   
-        public void addCar(String _brand, String _model, String _fuel, String _color, String _plateNum, int _passengers, 
+public void addCar(String _brand, String _model, String _type, String _fuel, String _color, String _plateNum, int _passengers, 
                    String _gearbox, int _price, String _air_cond, String _airbag, String _sunroof,
                    String _heated_seats, String _nav_sys, String _bluetooth, String _elec_window, String _gps) {
     
-    String insertQuery = "INSERT INTO `cars`(`brand`, `model`, `fuel`, `color`, `plateNum`, `passengers`, `gearbox`, `price`, `air_conditioning`, `air_bag`, `sunroof`, `heated_seats`, `nav_system`, `bluetooth`, `electric_windows`, `gps`, `status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    String insertQuery = "INSERT INTO `cars`(`brand`, `model`, `car_type`, `fuel`, `color`, `plateNum`, `passengers`, `gearbox`, `price`, `air_conditioning`, `air_bag`, `sunroof`, `heated_seats`, `nav_system`, `bluetooth`, `electric_windows`, `gps`, `status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     PreparedStatement ps;
 
     try {
         ps = DB.getConnection().prepareStatement(insertQuery);
-        ps.setString(1, _brand); 
-        ps.setString(2, _model);
-        ps.setString(3, _fuel);
-        ps.setString(4, _color);
-        ps.setString(5, _plateNum);
-        ps.setInt(6, _passengers);
-        ps.setString(7, _gearbox);
-        ps.setInt(8, _price);
-        ps.setString(9, _air_cond);
-        ps.setString(10, _airbag);
-        ps.setString(11, _sunroof);
-        ps.setString(12, _heated_seats);
-        ps.setString(13, _nav_sys);
-        ps.setString(14, _bluetooth);
-        ps.setString(15, _elec_window);
-        ps.setString(16, _gps);
-        ps.setString(17, "available");
+        ps.setString(1, _brand);         // 1
+        ps.setString(2, _model);         // 2
+        ps.setString(3, _type);          // 3
+        ps.setString(4, _fuel);          // 4
+        ps.setString(5, _color);         // 5
+        ps.setString(6, _plateNum);      // 6
+        ps.setInt(7, _passengers);       // 7
+        ps.setString(8, _gearbox);       // 8
+        ps.setInt(9, _price);            // 9
+        ps.setString(10, _air_cond);     // 10
+        ps.setString(11, _airbag);       // 11
+        ps.setString(12, _sunroof);      // 12
+        ps.setString(13, _heated_seats); // 13
+        ps.setString(14, _nav_sys);      // 14
+        ps.setString(15, _bluetooth);    // 15
+        ps.setString(16, _elec_window);  // 16
+        ps.setString(17, _gps);          // 17
+        ps.setString(18, "available");   // 18
+
 
         if (ps.executeUpdate() != 0) {
             JOptionPane.showMessageDialog(null, "The new Vehicle has been Added", "Add Vehicle", 1);
@@ -370,7 +382,7 @@ public class Car {
 
      
      // function to edit brand
-     public void editCar(int _id, String _brand, String _model, String _fuel, String _color, String _plateNum, int _passengers, 
+     public void editCar(int _id, String _brand, String _model, String _type, String _fuel, String _color, String _plateNum, int _passengers, 
                         String _gearbox, int _price, String _air_cond, String _airbag, String _sunroof,
                         String _heated_seats, String _nav_sys, String _bluetooth, String _elec_window, String _gps){
         String editQuery = "UPDATE `cars` SET `brand`=?,`model`=?,`fuel`=?,`color`=?,`plateNum`=?,`passengers`=?,`gearbox`=?,`price`=?,`air_conditioning`=?,`air_bag`=?,`sunroof`=?,`heated_seats`=?,`nav_system`=?,`bluetooth`=?,`electric_windows`=?,`gps`=? WHERE `id` =?";
@@ -379,23 +391,25 @@ public class Car {
         try {
             
             ps = DB.getConnection().prepareStatement(editQuery);
-            ps.setString(1, _brand);
-            ps.setString(2, _model);
-            ps.setString(3, _fuel);
-            ps.setString(4, _color);
-            ps.setString(5, _plateNum);
-            ps.setInt(6, _passengers);
-            ps.setString(7, _gearbox);
-            ps.setInt(8, _price);
-            ps.setString(9, _air_cond);
-            ps.setString(10, _airbag);
-            ps.setString(11, _sunroof);
-            ps.setString(12, _heated_seats);
-            ps.setString(13, _nav_sys);
-            ps.setString(14, _bluetooth);
-            ps.setString(15, _elec_window);
-            ps.setString(16, _gps);
-            ps.setInt(17, _id);
+            ps.setString(1, _brand);          // 1
+            ps.setString(2, _model);          // 2
+            ps.setString(3, _type);           // 3
+            ps.setString(4, _fuel);           // 4
+            ps.setString(5, _color);          // 5
+            ps.setString(6, _plateNum);       // 6
+            ps.setInt(7, _passengers);        // 7
+            ps.setString(8, _gearbox);        // 8
+            ps.setInt(9, _price);             // 9
+            ps.setString(10, _air_cond);      // 10
+            ps.setString(11, _airbag);        // 11
+            ps.setString(12, _sunroof);       // 12
+            ps.setString(13, _heated_seats);  // 13
+            ps.setString(14, _nav_sys);       // 14
+            ps.setString(15, _bluetooth);     // 15
+            ps.setString(16, _elec_window);   // 16
+            ps.setString(17, _gps);           // 17
+            ps.setInt(18, _id);               // 18
+
             
             if(ps.executeUpdate()!=0){
                 JOptionPane.showMessageDialog(null , "The Vehicle has been edited" , "Edit Vehicle info", 1);
@@ -471,11 +485,28 @@ public class Car {
              if (rs.next())
              {
 
-             car = new Car(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),
-                                    rs.getString(5),rs.getString(6),rs.getInt(7),rs.getString(8),
-                                    rs.getInt(9),rs.getString(10),rs.getString(11), rs.getString(12),
-                                    rs.getString(13),rs.getString(14),rs.getString(15),rs.getString(16),
-                                    rs.getString(17), rs.getString(18));
+             car = new Car(
+                            rs.getInt(1),      // id
+                            rs.getString(2),   // brand
+                            rs.getString(3),   // model
+                            rs.getString(4),   // type
+                            rs.getString(5),   // fuel
+                            rs.getString(6),   // color
+                            rs.getString(7),   // plateNum
+                            rs.getInt(8),      // passengers
+                            rs.getString(9),   // gearbox
+                            rs.getInt(10),     // price
+                            rs.getString(11),  // air_conditioning
+                            rs.getString(12),  // air_bag
+                            rs.getString(13),  // sunroof
+                            rs.getString(14),  // heated_seats
+                            rs.getString(15),  // nav_system
+                            rs.getString(16),  // bluetooth
+                            rs.getString(17),  // electric_windows
+                            rs.getString(18),  // gps
+                            rs.getString(19)   // status
+                        );
+
              }
              else
              {
@@ -518,12 +549,28 @@ public class Car {
              while(rs.next())
              {
                  
-                 Car car  = new Car(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),
-                                    rs.getString(5),rs.getString(6),rs.getInt(7),rs.getString(8),
-                                    rs.getInt(9),rs.getString(10),rs.getString(11), rs.getString(12),
-                                    rs.getString(13),rs.getString(14),rs.getString(15),rs.getString(16),
-                                    rs.getString(17), rs.getString(18)
-                                    );
+               Car  car = new Car(
+                        rs.getInt(1),      // id
+                        rs.getString(2),   // brand
+                        rs.getString(3),   // model
+                        rs.getString(4),   // type
+                        rs.getString(5),   // fuel
+                        rs.getString(6),   // color
+                        rs.getString(7),   // plateNum
+                        rs.getInt(8),      // passengers
+                        rs.getString(9),   // gearbox
+                        rs.getInt(10),     // price
+                        rs.getString(11),  // air_conditioning
+                        rs.getString(12),  // air_bag
+                        rs.getString(13),  // sunroof
+                        rs.getString(14),  // heated_seats
+                        rs.getString(15),  // nav_system
+                        rs.getString(16),  // bluetooth
+                        rs.getString(17),  // electric_windows
+                        rs.getString(18),  // gps
+                        rs.getString(19)   // status
+                    );
+
                  
                  carsList.add(car);
                  
