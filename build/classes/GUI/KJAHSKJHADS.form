@@ -97,16 +97,44 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="4" rowCount="4">
-                    <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                    <Column editable="true" title="Title 4" type="java.lang.Object"/>
+                    <Column editable="false" title="id" type="java.lang.Object"/>
+                    <Column editable="false" title="first name" type="java.lang.Object"/>
+                    <Column editable="true" title="last name" type="java.lang.Object"/>
+                    <Column editable="true" title="email" type="java.lang.Object"/>
                   </Table>
                 </Property>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                  </TableColumnModel>
+                </Property>
                 <Property name="opaque" type="boolean" value="false"/>
+                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                  <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="JTableHeader TblHeader = jTable1.getTableHeader();&#xa;TblHeader.setBackground(Color.decode(&quot;#015551&quot;));&#xa;jTable1.getTableHeader().setForeground(Color.decode(&quot;#015551&quot;));&#xa; TblHeader.setForeground(Color.WHITE);"/>
+                <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="JTableHeader TblHeader = jTable1.getTableHeader();&#xa;TblHeader.setBackground(Color.decode(&quot;#16404D&quot;));&#xa;jTable1.getTableHeader().setForeground(Color.decode(&quot;#16404D&quot;));&#xa; TblHeader.setForeground(Color.BLUE);&#xa;&#xa;&#xa;jTable1.getTableHeader().setBackground(new Color(100, 100, 180));&#xa;jTable1.getTableHeader().setForeground(Color.WHITE);"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
               </AuxValues>
             </Component>
           </SubComponents>

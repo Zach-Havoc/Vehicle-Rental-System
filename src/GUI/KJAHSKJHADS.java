@@ -63,15 +63,26 @@ public class KJAHSKJHADS extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "id", "first name", "last name", "email"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable1.setOpaque(false);
         jScrollPane1.setViewportView(jTable1);
         JTableHeader TblHeader = jTable1.getTableHeader();
-        TblHeader.setBackground(Color.decode("#015551"));
-        jTable1.getTableHeader().setForeground(Color.decode("#015551"));
-        TblHeader.setForeground(Color.WHITE);
+        TblHeader.setBackground(Color.decode("#16404D"));
+        jTable1.getTableHeader().setForeground(Color.decode("#16404D"));
+        TblHeader.setForeground(Color.BLUE);
+
+        jTable1.getTableHeader().setBackground(new Color(100, 100, 180));
+        jTable1.getTableHeader().setForeground(Color.WHITE);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -147,6 +158,6 @@ public class KJAHSKJHADS extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    public javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
