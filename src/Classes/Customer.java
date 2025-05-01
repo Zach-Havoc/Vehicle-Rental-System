@@ -206,7 +206,7 @@ public class Customer {
      public ArrayList<Customer> CustomerList(){
          ArrayList<Customer> customerList = new ArrayList<>();
          
-         ResultSet rs = getData("SELECT * FROM `customers`");
+         ResultSet rs = getData("SELECT * FROM view_all_customers;");
          
          try {
              while(rs.next()){

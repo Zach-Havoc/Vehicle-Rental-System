@@ -54,6 +54,16 @@ public class Chart extends javax.swing.JPanel {
             blankPlotChart.setMaxValues(max);
         }
     }
+    public void clearChart() {
+    model.clear();             // Clear the chart data
+    legends.clear();           // Clear the legend data
+    blankPlotChart.setLabelCount(0);  // Reset label count
+    panelLegend.removeAll();  // Clear legend UI components
+    panelLegend.repaint();
+    panelLegend.revalidate();
+    repaint();                // Repaint the chart panel
+}
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

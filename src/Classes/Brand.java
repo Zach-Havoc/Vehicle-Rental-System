@@ -217,25 +217,30 @@ public class Brand {
 }
 
     
-    public static ArrayList<BrandBookingCount> getTopNBookedBrands(int limit) {
+  public static ArrayList<BrandBookingCount> getTopNBookedBrandsFromHistory(int limit, int year) {
     ArrayList<BrandBookingCount> topBrands = new ArrayList<>();
     String sql = "SELECT c.brand, COUNT(*) AS times_booked " +
-                 "FROM reservation r " +
-                 "JOIN cars c ON r.car_id = c.id " +
+                 "FROM history h " +
+                 "JOIN cars c ON h.car_id = c.id " +
+                 "WHERE YEAR(h.start_date) = ? " +
                  "GROUP BY c.brand " +
                  "ORDER BY times_booked DESC " +
-                 "LIMIT " + limit;
+                 "LIMIT ?";
     try (PreparedStatement ps = DB.getConnection().prepareStatement(sql)) {
+        ps.setInt(1, year);
+        ps.setInt(2, limit);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             topBrands.add(new BrandBookingCount(rs.getString("brand"), rs.getInt("times_booked")));
         }
     } catch (SQLException ex) {
         Logger.getLogger(Brand.class.getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     return topBrands;
 }
+
+
+
 
      
 }

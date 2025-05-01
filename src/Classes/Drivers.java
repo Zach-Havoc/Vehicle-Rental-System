@@ -191,7 +191,7 @@ public class Drivers {
      public ArrayList<Drivers> DriversList(){
          ArrayList<Drivers> DriversList = new ArrayList<>();
          
-         ResultSet rs = getData("SELECT * FROM `drivers`");
+         ResultSet rs = getData("SELECT * FROM view_all_drivers;");
          
          try {
              while(rs.next()){

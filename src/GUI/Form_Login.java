@@ -17,6 +17,8 @@ import fordesign.RoundedButton;
 import fordesign.RoundedPasswordField;
 import fordesign.RoundedTextField;
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
@@ -48,7 +50,6 @@ public class Form_Login extends javax.swing.JFrame {
 
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel_close = new javax.swing.JLabel();
         jLabel_title = new javax.swing.JLabel();
         jLabel_username = new javax.swing.JLabel();
         jTextField_username = new javax.swing.JTextField();
@@ -56,6 +57,7 @@ public class Form_Login extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jCheckBox_password = new javax.swing.JCheckBox();
         jButton1 = new RoundedButton(45);
+        jLabel_close = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -74,18 +76,6 @@ public class Form_Login extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel_close.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
-        jLabel_close.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel_close.setText("X");
-        jLabel_close.setToolTipText("");
-        jLabel_close.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel_close.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel_closeMouseClicked(evt);
-            }
-        });
-        jPanel1.add(jLabel_close, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 10, 30, 33));
 
         jLabel_title.setFont(new java.awt.Font("Trebuchet MS", 1, 55)); // NOI18N
         jLabel_title.setForeground(new java.awt.Color(255, 212, 60));
@@ -165,6 +155,18 @@ public class Form_Login extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 440, 347, 43));
+
+        jLabel_close.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
+        jLabel_close.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel_close.setText("X");
+        jLabel_close.setToolTipText("");
+        jLabel_close.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel_close.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel_closeMouseClicked(evt);
+            }
+        });
+        jPanel1.add(jLabel_close, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 10, 30, 30));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background_1.jpg"))); // NOI18N
         jLabel2.setOpaque(true);
@@ -252,6 +254,9 @@ public class Form_Login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 //        // TODO add your handling code here:
+        setFont(new Font("SansSerif", Font.BOLD, 16));
+        BorderFactory.createEmptyBorder(10, 30, 10, 30);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         String username = jTextField_username.getText();
         String password = String.valueOf(jPasswordField1.getPassword());
         

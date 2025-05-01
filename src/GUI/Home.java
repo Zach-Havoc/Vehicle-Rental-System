@@ -15,6 +15,7 @@ import Classes.Customer;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.raven.chart.LegendItem;
 import com.raven.chart.ModelChart;
 import com.raven.chart.ModelLegend;
@@ -67,7 +68,17 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import fordesign.RoundedCornerComboBoxTest;
 import fordesign.RoundedTextField;
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import raven.table.TableGradientCell;
 /**  
  *
@@ -139,35 +150,8 @@ public class Home extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         getContentPane().setBackground(new Color(250, 250, 250));
-        
-        ArrayList<Brand.BrandBookingCount> chartData = Brand.getTopNBookedBrands(3); // See function below
-        Color[] topColors = {
-            new Color(244, 67, 54),    // red
-            new Color(33, 150, 243),   // blue
-            new Color(76, 175, 80)     // green
-        };
-        int n = 3;
-        //hart.clear();
-        for (int i = 0; i < n; i++) {
-            if (i < chartData.size()) {
-                chart.addLegend(chartData.get(i).brand, topColors[i]);
-            } else {
-                chart.addLegend("", topColors[i]);
-            }
-        }
-        double[] bookingsArray = new double[n];
-        for (int i = 0; i < n; i++) {
-            if (i < chartData.size()) {
-                bookingsArray[i] = chartData.get(i).count;
-            } else {
-                bookingsArray[i] = 0;
-            }
-        }
-        chart.addData(new ModelChart("Top Brands", bookingsArray));
 
-        web = new WebPanel();
-        web.load(getContent());
-        //panel.add(web);
+        
         
         DefaultColor = new Color(142,202,230);
         ClickedColor = new Color(87, 180, 186);
@@ -175,7 +159,6 @@ public class Home extends javax.swing.JFrame {
         ButtonGroup btn_group = new ButtonGroup();
         btn_group.add(jRadioButton_Automatic);
         btn_group.add(jRadioButton_Manual);
-        
         populateComboBoxBrands();
         populateJtableWithBrands();
         populateJtableWithCustomers();
@@ -183,7 +166,8 @@ public class Home extends javax.swing.JFrame {
         populateJtableWithCars();
         populateJtableWithDrivers();
         populateJtableWithBooking();
-        
+        populateTopCustomers();
+        timeSet();
         //set border in bookcarpanel
         jLabel_select_car.setBorder(border);
         jLabel_select_customer.setBorder(border);
@@ -205,7 +189,7 @@ public class Home extends javax.swing.JFrame {
          jRadioButton_with_Damage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             // Show damage fee spinner when 'With Damage' is selected
-            jSpinner_damage_Fee.setVisible(true);
+            jSpinner_damage_Fee.setEnabled(true);
             jLabel51.setVisible(true);
             }
         });
@@ -213,17 +197,112 @@ public class Home extends javax.swing.JFrame {
         jRadioButton_without_Damage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             // Hide damage fee spinner when 'Without Damage' is selected
-            jSpinner_damage_Fee.setVisible(false);
+            jSpinner_damage_Fee.setEnabled(false);
             jLabel51.setVisible(false);
             }
         });
+        for (int year = 2020; year <= LocalDate.now().getYear(); year++) {
+            jComboBox_Year.addItem(String.valueOf(year));
+        }
 
+
+populateYearComboBox();
         
-  
-        populateTopCustomers();
+    jComboBox_Year.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        String selectedYear = (String) jComboBox_Year.getSelectedItem();
+        if (selectedYear != null && !selectedYear.equals("Select Year")) {
+            updateChartByYear(Integer.parseInt(selectedYear));
+        }
+    }
+});
+
 
     } // ITO ANG KATAPUSAN NG HOME BRACKET
+                 
+       public void updateChartByYear(int year) {
+    chart.clearChart(); // Clear previous chart data
 
+    ArrayList<Brand.BrandBookingCount> chartData = Brand.getTopNBookedBrandsFromHistory(3, year);
+
+    if (chartData.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "No booking data found for the year " + year, "No Data", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    Color[] topColors = {
+        new Color(244, 67, 54),    // red
+        new Color(33, 150, 243),   // blue
+        new Color(76, 175, 80)     // green
+    };
+
+    int n = 3;
+    for (int i = 0; i < n; i++) {
+        if (i < chartData.size()) {
+            chart.addLegend(chartData.get(i).brand, topColors[i]);
+        } else {
+            chart.addLegend("", topColors[i]);
+        }
+    }
+
+    double[] bookingsArray = new double[n];
+    for (int i = 0; i < n; i++) {
+        bookingsArray[i] = (i < chartData.size()) ? chartData.get(i).count : 0;
+    }
+
+    chart.addData(new ModelChart("Top Brands in " + year, bookingsArray));
+}
+
+
+
+
+
+    
+    
+        public void populateYearComboBox() {
+    jComboBox_Year.removeAllItems(); // Clear any previous items
+
+    // Add placeholder
+    jComboBox_Year.addItem("Select Year");
+
+    // Get current year
+    int currentYear = java.time.Year.now().getValue();
+
+    // Add recent 10 years
+    for (int i = 0; i < 10; i++) {
+        jComboBox_Year.addItem(String.valueOf(currentYear - i));
+    }
+
+    // Optionally select placeholder by default
+    jComboBox_Year.setSelectedIndex(0);
+}
+
+    
+    public void clearChart() {
+    model.clear();   // clear all model data
+    legends.clear(); // clear legends
+  // blankPlotChart.clear(); // if BlankPlotChart has its own clear method
+    repaint();
+    revalidate();
+}
+
+    
+    
+                public void timeSet() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a");
+                String formattedDateTime = now.format(formatter);
+                SwingUtilities.invokeLater(() -> datetime.setText(formattedDateTime));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+                
                  public void populateTopCustomers() {
     // Get top customers
     ArrayList<BookingHistory.CustomerBookingCount> topCustomers = BookingHistory.getTop5Customers();
@@ -236,32 +315,32 @@ public class Home extends javax.swing.JFrame {
                 case 0:
                     nameLabel.setText(customer.customerName);
                     badge.setText(getBadge(customer.totalBookings));
-                    badge.setForeground(getBadgeColor(customer.totalBookings));
+                    badge.setBackground(getBadgeColor(customer.totalBookings));
                     count.setText(String.valueOf(customer.totalBookings));
 
                     break;
                 case 1:
                     nameLabel1.setText(customer.customerName);
                     badge1.setText(getBadge(customer.totalBookings));
-                    badge1.setForeground(getBadgeColor(customer.totalBookings));
+                    badge1.setBackground(getBadgeColor(customer.totalBookings));
                     count1.setText(String.valueOf(customer.totalBookings));
                     break;
                 case 2:
                     nameLabel2.setText(customer.customerName);
                     badge2.setText(getBadge(customer.totalBookings));
-                    badge2.setForeground(getBadgeColor(customer.totalBookings));
+                    badge2.setBackground(getBadgeColor(customer.totalBookings));
                     count2.setText(String.valueOf(customer.totalBookings));
                     break;
                 case 3:
                     nameLabel3.setText(customer.customerName);
                     badge3.setText(getBadge(customer.totalBookings));
-                    badge3.setForeground(getBadgeColor(customer.totalBookings));
+                    badge3.setBackground(getBadgeColor(customer.totalBookings));
                     count3.setText(String.valueOf(customer.totalBookings));
                     break;
                 case 4:
                     nameLabel4.setText(customer.customerName);
                     badge4.setText(getBadge(customer.totalBookings));
-                    badge4.setForeground(getBadgeColor(customer.totalBookings));
+                    badge4.setBackground(getBadgeColor(customer.totalBookings));
                     count4.setText(String.valueOf(customer.totalBookings));
                     break;
             }
@@ -312,26 +391,6 @@ public class Home extends javax.swing.JFrame {
                 }
             }
 
-    
-        private String getContent() {
-        ModelPieChart data = new ModelPieChart("Monthly Income");
-        data.addData("ABC", 80);
-        data.addData("Tiger", 150);
-        data.addData("Vital", 300);
-        data.addData("Fanta", 250);
-        data.addData("Coca", 180);
-        return data.toChartContent();
-    }
-
-    private String getContent1() {
-        ModelPieChart data = new ModelPieChart("Monthly Income");
-        data.addData("ABC", 5);
-        data.addData("Tiger", 10);
-        data.addData("Vital", 15);
-        data.addData("Fanta", 8);
-        data.addData("Coca", 2);
-        return data.toChartContent();
-    }
     
         // create a static function to display customer id and name
         public static void displayCustomer(String id, String name)
@@ -636,7 +695,15 @@ public class Home extends javax.swing.JFrame {
         
     }
     
-    
+    public void filterCarTableByStatus(String status) {
+    TableRowSorter<?> sorter = (TableRowSorter<?>) jTable_Cars.getRowSorter();
+    if (status.equalsIgnoreCase("all")) {
+        sorter.setRowFilter(null);  // Show all rows
+    } else {
+        sorter.setRowFilter(RowFilter.regexFilter("(?i)^" + status + "$", 10)); // 10 is the index of the "Status" column
+    }
+}
+
     
      // gagawa ng function para ipulate the jTable with Vehicle
     public void populateJtableWithCars(){
@@ -644,7 +711,7 @@ public class Home extends javax.swing.JFrame {
       
        ArrayList<Car>cars_list = car.carsList();
        
-        String[] columnsName = {"ID", "Brand","Model", "Type", "Fuel Type","Color", "Plate Number","Passengers", "Transmission",
+        String[] columnsName = {"ID", "Brand","Model", "Type", "Fuel Type","Color", "Plate Number","Seats", "Transmission",
                                 "Price", "Status"};
 
        // Rows
@@ -665,8 +732,32 @@ public class Home extends javax.swing.JFrame {
            rows[i][10] = cars_list.get(i).getStatus();
        }
        DefaultTableModel model = new DefaultTableModel(rows,columnsName);
-       jTable_Cars.setModel(model);
-       
+        jTable_Cars.setModel(model);
+        jTable_Cars.getColumnModel().getColumn(0).setMinWidth(0);
+        jTable_Cars.getColumnModel().getColumn(0).setMaxWidth(0);
+        jTable_Cars.getColumnModel().getColumn(0).setWidth(0);
+        jTable_Cars.getColumnModel().getColumn(0).setPreferredWidth(0);
+        jTable_Cars.getColumnModel().getColumn(1).setPreferredWidth(125); // Brand
+        jTable_Cars.getColumnModel().getColumn(2).setPreferredWidth(100); // Model
+        jTable_Cars.getColumnModel().getColumn(3).setPreferredWidth(150); // Type
+        jTable_Cars.getColumnModel().getColumn(4).setPreferredWidth(115); // Fuel Type
+        jTable_Cars.getColumnModel().getColumn(5).setPreferredWidth(90); // Color
+        jTable_Cars.getColumnModel().getColumn(6).setPreferredWidth(140);  // Plate number
+        jTable_Cars.getColumnModel().getColumn(7).setPreferredWidth(70); // Seats
+        jTable_Cars.getColumnModel().getColumn(8).setPreferredWidth(145); // Transmission
+        jTable_Cars.getColumnModel().getColumn(9).setPreferredWidth(90); // Price
+        jTable_Cars.getColumnModel().getColumn(10).setPreferredWidth(160); // Status
+        
+        jTable_Cars.setModel((TableModel) model);
+
+        // Enable sorting and filtering
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable_Cars.setRowSorter(sorter);
+
+        jComboBox_filter.addActionListener(e -> {
+            String selectedStatus = jComboBox_filter.getSelectedItem().toString().toLowerCase();
+            filterCarTableByStatus(selectedStatus.equals("all") ? "all" : selectedStatus);
+        });
     }
     
         // gagawa ng function para ipulate the jTable with driver (id & name )
@@ -766,6 +857,7 @@ public class Home extends javax.swing.JFrame {
         BookTabLabel = new javax.swing.JLabel();
         returnCarTab = new javax.swing.JPanel();
         ReturnTabLabel = new javax.swing.JLabel();
+        datetime = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         homePanel = new javax.swing.JPanel();
         jScrollPane10 = new raven.scroll.win11.ScrollPaneWin11();
@@ -792,9 +884,11 @@ public class Home extends javax.swing.JFrame {
         jLabel25 = new javax.swing.JLabel();
         jPanel8 = new RoundedPanel(15);
         chart = new com.raven.chart.Chart();
+        jComboBox_Year = new javax.swing.JComboBox<>();
         jPanel9 = new RoundedPanel(15);
         jScrollPane3 = new raven.scroll.win11.ScrollPaneWin11();
         jTable_Cars = new javax.swing.JTable();
+        jComboBox_filter = new javax.swing.JComboBox<>();
         panelTopCustomersList = new RoundedPanel(15);
         jLabel1 = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
@@ -821,6 +915,7 @@ public class Home extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel54 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         brandPanel = new javax.swing.JPanel();
         jSpinner_id = new javax.swing.JSpinner();
         jLabel20 = new javax.swing.JLabel();
@@ -898,7 +993,7 @@ public class Home extends javax.swing.JFrame {
         jLabel_dropoff = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
         jLabel_dropoff1 = new javax.swing.JLabel();
-        jButton_BookCar_ = new RoundedButton(50);
+        jButton_BookCar_ = new javax.swing.JButton();
         jLabel47 = new javax.swing.JLabel();
         jLabel_totalFee = new javax.swing.JLabel();
         jButton_BookingLIst_ = new javax.swing.JButton();
@@ -1015,6 +1110,7 @@ public class Home extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(238, 241, 249));
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         setLocationByPlatform(true);
         setResizable(false);
@@ -1233,12 +1329,17 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        datetime.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        datetime.setText("jLabel55");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(471, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
+                .addComponent(datetime, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
                 .addComponent(homeTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(vehicleTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1258,14 +1359,15 @@ public class Home extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(returnCarTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bookCarTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(customerTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(driverTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(brandTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(vehicleTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(homeTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(datetime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(returnCarTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bookCarTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(customerTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(driverTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(brandTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(vehicleTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(homeTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1506,21 +1608,27 @@ public class Home extends javax.swing.JFrame {
 
         chart.setBackground(new Color(255,255,255)); // Light gray
 
+        jComboBox_Year.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2024", "2023", "2022", "2021" }));
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jComboBox_Year, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
-                .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(jComboBox_Year, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
@@ -1557,22 +1665,31 @@ public class Home extends javax.swing.JFrame {
         jTable_Cars.setBackground(new Color(255,255,255));
         jTable_Cars.setBorder(null);
 
+        jComboBox_filter.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jComboBox_filter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Available", "Booked", "Maintenance" }));
+
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jComboBox_filter, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jComboBox_filter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(22, 22, 22))
         );
+
+        panelTopCustomersList.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1586,7 +1703,9 @@ public class Home extends javax.swing.JFrame {
         count.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         count.setPreferredSize(new java.awt.Dimension(45, 16));
 
+        badge.setBackground(new java.awt.Color(255, 255, 255));
         badge.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        badge.setForeground(new java.awt.Color(255, 255, 255));
         badge.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         badge.setOpaque(true);
         badge.setPreferredSize(new java.awt.Dimension(45, 16));
@@ -1595,7 +1714,9 @@ public class Home extends javax.swing.JFrame {
         nameLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nameLabel1.setPreferredSize(new java.awt.Dimension(45, 16));
 
+        badge1.setBackground(new java.awt.Color(255, 255, 255));
         badge1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        badge1.setForeground(new java.awt.Color(255, 255, 255));
         badge1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         badge1.setOpaque(true);
         badge1.setPreferredSize(new java.awt.Dimension(45, 16));
@@ -1604,7 +1725,9 @@ public class Home extends javax.swing.JFrame {
         count1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         count1.setPreferredSize(new java.awt.Dimension(45, 16));
 
+        badge2.setBackground(new java.awt.Color(255, 255, 255));
         badge2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        badge2.setForeground(new java.awt.Color(255, 255, 255));
         badge2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         badge2.setOpaque(true);
         badge2.setPreferredSize(new java.awt.Dimension(45, 16));
@@ -1625,12 +1748,16 @@ public class Home extends javax.swing.JFrame {
         nameLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nameLabel3.setPreferredSize(new java.awt.Dimension(45, 16));
 
+        badge3.setBackground(new java.awt.Color(255, 255, 255));
         badge3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        badge3.setForeground(new java.awt.Color(255, 255, 255));
         badge3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         badge3.setOpaque(true);
         badge3.setPreferredSize(new java.awt.Dimension(45, 16));
 
+        badge4.setBackground(new java.awt.Color(255, 255, 255));
         badge4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        badge4.setForeground(new java.awt.Color(255, 255, 255));
         badge4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         badge4.setOpaque(true);
         badge4.setPreferredSize(new java.awt.Dimension(45, 16));
@@ -1703,6 +1830,17 @@ public class Home extends javax.swing.JFrame {
         jLabel54.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel54.setText("CARS");
 
+        jButton2.setBackground(new java.awt.Color(33, 158, 188));
+        jButton2.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("View all customer");
+        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTopCustomersListLayout = new javax.swing.GroupLayout(panelTopCustomersList);
         panelTopCustomersList.setLayout(panelTopCustomersListLayout);
         panelTopCustomersListLayout.setHorizontalGroup(
@@ -1711,24 +1849,10 @@ public class Home extends javax.swing.JFrame {
                 .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelTopCustomersListLayout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addGap(75, 75, 75)
-                        .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addGap(70, 70, 70)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addGap(15, 32, Short.MAX_VALUE))
-                    .addGroup(panelTopCustomersListLayout.createSequentialGroup()
                         .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTopCustomersListLayout.createSequentialGroup()
                                 .addGap(16, 16, 16)
-                                .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panelTopCustomersListLayout.createSequentialGroup()
                                         .addComponent(nameLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1769,8 +1893,27 @@ public class Home extends javax.swing.JFrame {
                                 .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(count, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
                                     .addComponent(jLabel54, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 18, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopCustomersListLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopCustomersListLayout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopCustomersListLayout.createSequentialGroup()
+                        .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(75, 75, 75)
+                        .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addGap(70, 70, 70)
+                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addGap(39, 39, 39))))
         );
         panelTopCustomersListLayout.setVerticalGroup(
             panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1812,16 +1955,19 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(badge4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(nameLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(43, 43, 43)
+                .addGap(24, 24, 24)
                 .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel2)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel18, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelTopCustomersListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -1832,24 +1978,26 @@ public class Home extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(panelTopCustomersList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 31, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(99, 99, 99)
+                                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(54, Short.MAX_VALUE))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1865,9 +2013,9 @@ public class Home extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelTopCustomersList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         jScrollPane10.setViewportView(jPanel6);
@@ -1882,7 +2030,7 @@ public class Home extends javax.swing.JFrame {
 
         jSpinner_id.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
 
-        jLabel20.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel20.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
         jLabel20.setText("ID:");
 
         jTextField_name.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
@@ -1892,10 +2040,10 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        jLabel21.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel21.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
         jLabel21.setText("Name:");
 
-        jLabel23.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel23.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
         jLabel23.setText("Logo:");
 
         jLabel_logo.setBackground(new java.awt.Color(255, 255, 255));
@@ -2031,38 +2179,39 @@ public class Home extends javax.swing.JFrame {
             brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(brandPanelLayout.createSequentialGroup()
                 .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(brandPanelLayout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel20)
-                            .addComponent(jLabel23))
-                        .addGap(18, 18, 18)
-                        .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField_name, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel_logo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSpinner_id, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton_Add, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton_Edit, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton_Remove, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, brandPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, brandPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel_imagePath, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(133, 133, 133))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, brandPanelLayout.createSequentialGroup()
-                                .addComponent(jButton_browse, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(164, 164, 164))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, brandPanelLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton_Refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton_Clear, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(98, 98, 98)))
+                        .addComponent(jLabel_imagePath, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(151, 151, 151))
+                    .addGroup(brandPanelLayout.createSequentialGroup()
+                        .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(brandPanelLayout.createSequentialGroup()
+                                .addGap(85, 85, 85)
+                                .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel21)
+                                    .addComponent(jLabel20)
+                                    .addComponent(jLabel23))
+                                .addGap(18, 18, 18)
+                                .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jTextField_name, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel_logo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jSpinner_id, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton_Add, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton_Edit, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton_Remove, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(brandPanelLayout.createSequentialGroup()
+                                .addGap(104, 104, 104)
+                                .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, brandPanelLayout.createSequentialGroup()
+                                        .addComponent(jButton_browse, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(66, 66, 66))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, brandPanelLayout.createSequentialGroup()
+                                        .addComponent(jButton_Refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButton_Clear, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)))
                 .addGroup(brandPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(brandPanelLayout.createSequentialGroup()
                         .addGap(90, 90, 90)
@@ -4475,7 +4624,7 @@ if (!isAvailable) {
         driver,            
         driverName          
     );
-
+    BookingHistory history = new BookingHistory();
 
 }    catch (Exception e) {
     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
@@ -4729,8 +4878,7 @@ if (!isAvailable) {
 
     private void jButton_Cars_History_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Cars_History_ActionPerformed
         // TODO add your handling code here:
-        Form_CarsHistory hstry = new Form_CarsHistory();
-        hstry.setVisible(true);
+         new Form_VehicleHistory().setVisible(true);
     }//GEN-LAST:event_jButton_Cars_History_ActionPerformed
 
     private void jButton_Cars_History_ComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jButton_Cars_History_ComponentAdded
@@ -4822,6 +4970,13 @@ if (totalKM <= 0) {
     return;
 }
 
+// Validate: Report Field (must be manually entered)
+String vehicleReport = jTextArea_Vehicle_report.getText().trim();
+if (vehicleReport.isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please write a vehicle report.", "Missing Field", JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
 // Validate: Radio button
 if (!jRadioButton_with_Damage.isSelected() && !jRadioButton_without_Damage.isSelected()) {
     JOptionPane.showMessageDialog(null, "Please select return condition (With or Without Damage).", "Missing Field", JOptionPane.WARNING_MESSAGE);
@@ -4838,7 +4993,7 @@ if (jRadioButton_with_Damage.isSelected()) {
     }
 }
 
-// Now get all other info (using selectedRow)
+// Retrieve data from table
 int carId = Integer.parseInt(jTable_Booked_vehicles.getValueAt(selectedRow, 0).toString());
 int bookid = Integer.parseInt(jTable_Booked_vehicles.getValueAt(selectedRow, 1).toString());
 String startDate = jTable_Booked_vehicles.getValueAt(selectedRow, 4).toString();
@@ -4848,52 +5003,31 @@ String driver = jTable_Booked_vehicles.getValueAt(selectedRow, 7).toString();
 String driverName = jTable_Booked_vehicles.getValueAt(selectedRow, 8).toString();
 double totalPrice = Double.parseDouble(jTable_Booked_vehicles.getValueAt(selectedRow, 6).toString());
 
-// Save to history and handle both cases:
+// Save to history and process logic
 BookingHistory history = new BookingHistory();
 
 if (jRadioButton_without_Damage.isSelected()) {
-    // Update car and booking status
     Booking book = new Booking();
-    car.updateCarStatus(carId, "available");  
+    car.updateCarStatus(carId, "available");
     book.updateBookStatus(bookid);
-
-    // Save to history (no damage fee)
     history.addHistory(carId, customerId, startDate, endDateStr, totalPrice, driver, driverName, totalKM);
-
-    // Show report
-    String vehicleReport = "Car with plate number: " + plateNumber + " has been returned successfully.";
-    jTextArea_Vehicle_report.setText(vehicleReport);  
-
-    // Clear the form fields
-    jTextField_plateNumber.setText("");
-    jDateChooser_retrunmentDate.setDate(null);
-    jSpinner_total_kilometer.setValue(0);
-    populateJtableWithBooking();
-
-} else { // With Damage
+} else {
     double totalPriceWithDamage = totalPrice + damageFee;
-
-    // Update car status to "maintenance"
     car.updateCarStatus(carId, "maintenance");
-
-    // Save to history (including damage fee)
     history.addHistory(carId, customerId, startDate, endDateStr, totalPriceWithDamage, driver, driverName, totalKM);
 
-    // Show damage report
-    String damageReport = "Car with plate number: " + plateNumber + " has been returned with damage. Damage fee: " + damageFee + ".";
-    jTextArea_Vehicle_report.setText(damageReport);
-
-    // Add to damaged cars table
     Form_DamagedCars dmgcrs = new Form_DamagedCars();
     dmgcrs.addToDamagedCarsTable(carId, plateNumber, damageFee);
-
-    // Clear the form fields
-    jTextField_plateNumber.setText("");
-    jDateChooser_retrunmentDate.setDate(null);
-    jSpinner_total_kilometer.setValue(1000);
-    jSpinner_damage_Fee.setValue(1000);
-    populateJtableWithBooking();
 }
+
+// Clear fields after return
+jTextField_plateNumber.setText("");
+jDateChooser_retrunmentDate.setDate(null);
+jSpinner_total_kilometer.setValue(1000);
+jSpinner_damage_Fee.setValue(1000);
+jTextArea_Vehicle_report.setText("");  // Clear report
+populateJtableWithBooking();
+
      
     }//GEN-LAST:event_jButton_ReturnActionPerformed
 
@@ -4911,6 +5045,17 @@ if (jRadioButton_without_Damage.isSelected()) {
     private void jComboBox_VehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_VehicleTypeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox_VehicleTypeActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        setFont(new Font("SansSerif", Font.BOLD, 16));
+        BorderFactory.createEmptyBorder(10, 30, 10, 30);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        Form_Viewcustomer vcustomer = new Form_Viewcustomer();
+        vcustomer.setVisible(true);
+//  
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -4938,7 +5083,8 @@ if (jRadioButton_without_Damage.isSelected()) {
             java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+//        FlatLaf.registerCustomDefaultsSource("raven.table");
+//        FlatMacDarkLaf.setup();
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -4974,10 +5120,12 @@ if (jRadioButton_without_Damage.isSelected()) {
     private javax.swing.JLabel count4;
     private javax.swing.JPanel customerPanel;
     private javax.swing.JPanel customerTab;
+    private javax.swing.JLabel datetime;
     private javax.swing.JPanel driverTab;
     private javax.swing.JPanel homePanel;
     private javax.swing.JPanel homeTab;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton_Add;
     private javax.swing.JButton jButton_Add2;
     private javax.swing.JButton jButton_Add3;
@@ -5027,7 +5175,9 @@ if (jRadioButton_without_Damage.isSelected()) {
     private javax.swing.JComboBox<String> jComboBox_DriverList;
     private javax.swing.JComboBox<String> jComboBox_Fuel;
     private javax.swing.JComboBox<String> jComboBox_VehicleType;
+    private javax.swing.JComboBox<String> jComboBox_Year;
     private javax.swing.JComboBox<String> jComboBox_brand;
+    private javax.swing.JComboBox<String> jComboBox_filter;
     private com.toedter.calendar.JDateChooser jDateChooser_Customer_birthDate;
     private com.toedter.calendar.JDateChooser jDateChooser_Driver_birthDate;
     private com.toedter.calendar.JDateChooser jDateChooser_Pickup_Date;

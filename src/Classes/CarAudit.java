@@ -39,7 +39,38 @@ public class CarAudit {
     private String gps;
     private String status;
     private String actionTime;
+    
+    public CarAudit(){};
+    
+    public CarAudit(int auditId, String action, int carId, String brand, String model,
+                String fuel, String color, String plateNum, int passengers, String gearbox,
+                double price, String airConditioning, String airbag, String sunroof,
+                String heatedSeats, String navSystem, String bluetooth, String electricWindows,
+                String gps, String status, String actionTime) {
+    this.auditId = auditId;
+    this.action = action;
+    this.carId = carId;
+    this.brand = brand;
+    this.model = model;
+    this.fuel = fuel;
+    this.color = color;
+    this.plateNum = plateNum;
+    this.passengers = passengers;
+    this.gearbox = gearbox;
+    this.price = price;
+    this.airConditioning = airConditioning;
+    this.airbag = airbag;
+    this.sunroof = sunroof;
+    this.heatedSeats = heatedSeats;
+    this.navSystem = navSystem;
+    this.bluetooth = bluetooth;
+    this.electricWindows = electricWindows;
+    this.gps = gps;
+    this.status = status;
+    this.actionTime = actionTime;
+}
 
+        
     // Getters and setters for all the fields
     public int getAuditId() { return auditId; }
     public void setAuditId(int auditId) { this.auditId = auditId; }
@@ -121,7 +152,7 @@ public class CarAudit {
                 // Setting the CarAudit object properties based on ResultSet data
                 audit.setAuditId(rs.getInt("audit_id"));
                 audit.setAction(rs.getString("action"));
-                audit.setCarId(rs.getInt("car_id"));
+                audit.setCarId(rs.getInt("id"));
                 audit.setBrand(rs.getString("brand"));
                 audit.setModel(rs.getString("model"));
                 audit.setFuel(rs.getString("fuel"));

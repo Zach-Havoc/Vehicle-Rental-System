@@ -280,7 +280,7 @@ public class Car {
          //function to get all cars, return in array an list
         public ArrayList<Car> carsList() {
         ArrayList<Car> carsList = new ArrayList<>();
-        ResultSet rs = getData("SELECT * FROM `cars`");
+        ResultSet rs = getData("SELECT * FROM view_all_cars;");
 
         try {
             while (rs.next()) {
@@ -648,5 +648,9 @@ public long countMaintenanceCars() {
 
     return maintenanceCarsCount;  // Return the count of available cars
 }
+
+
+
+
 
 }
